@@ -1,4 +1,4 @@
-module de.kotlinBerlin.kModel.api {
+module de.kotlinBerlin.kModel.core {
 
 	requires kotlin.stdlib;
 

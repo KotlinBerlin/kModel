@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "de.kotlin-berlin"
-    version = "1.0-RC1"
+    version = "1.0-RC2"
 
     repositories {
         jcenter()

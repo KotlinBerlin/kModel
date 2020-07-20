@@ -141,7 +141,7 @@ kotlin {
     tasks {
         if (!ideaActive) {
             withType(JavaCompile::class) {
-                val moduleName = "de.kotlinBerlin.${project.rootProject.name}.core"
+                val moduleName = "de.kotlinBerlin.${project.name.replace("-", ".")}"
                 doFirst {
                     println(tempJvm9KotlinOutputDir.absolutePath)
                     options.compilerArgs = listOf(

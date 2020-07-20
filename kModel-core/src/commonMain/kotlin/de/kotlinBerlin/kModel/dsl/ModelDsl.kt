@@ -255,10 +255,8 @@ class ModelAttributeBuilder<T : Any, V : Any?>(modelElement: ModelAttribute<T, V
     ModelElementBuilder<ModelAttribute<T, V>>(modelElement)
 
 /** Builder for a [ModelRelation] */
-class ModelRelationBuilder<S : Any, T : Any, SP, TP, ME, REV>(
-    relation: ModelRelation<S, T, SP, TP, ME, REV>,
-    private val reverseRelation: ModelRelation<T, S, TP, SP, REV, ME>
-) : ModelElementBuilder<ModelRelation<S, T, SP, TP, ME, REV>>(relation)
+class ModelRelationBuilder<S : Any, T : Any, SP, TP, ME, REV>(relation: ME, private val reverseRelation: REV) :
+    ModelElementBuilder<ME>(relation)
         where ME : ModelRelation<S, T, SP, TP, ME, REV>, REV : ModelRelation<T, S, TP, SP, REV, ME> {
 
     /** Enables to modify the reverse relation. */
@@ -268,9 +266,8 @@ class ModelRelationBuilder<S : Any, T : Any, SP, TP, ME, REV>(
 }
 
 /** Builder for a reverse [ModelRelation] */
-class ModelReverseRelationBuilder<S : Any, T : Any, SP, TP, ME, REV>(
-    relation: ModelRelation<S, T, SP, TP, ME, REV>,
-) : ModelElementBuilder<ModelRelation<S, T, SP, TP, ME, REV>>(relation)
+class ModelReverseRelationBuilder<S : Any, T : Any, SP, TP, ME, REV>(relation: ME) :
+    ModelElementBuilder<ModelRelation<S, T, SP, TP, ME, REV>>(relation)
         where ME : ModelRelation<S, T, SP, TP, ME, REV>, REV : ModelRelation<T, S, TP, SP, REV, ME>
 
 private fun <T : Any> getOrCreateModelClass(aKotlinClass: KClass<T>): ModelClass<T> {

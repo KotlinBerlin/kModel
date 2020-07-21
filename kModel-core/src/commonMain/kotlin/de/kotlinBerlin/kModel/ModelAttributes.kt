@@ -2,6 +2,7 @@
 
 package de.kotlinBerlin.kModel
 
+import kotlin.reflect.KFunction1
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
@@ -9,26 +10,37 @@ import kotlin.reflect.KProperty1
 sealed class ModelAttribute<T : Any, V : Any?>(
     /** The [ModelClass] that this attribute belongs to. */
     val modelClass: ModelClass<T>,
-    internal open val property: KProperty1<T, V>
+    /** The property wrapped by this attribute. */
+    val name: String,
+    private val getter: (T) -> V
 ) : ModelElement() {
-    override val id: String get() = "${modelClass.id}.${property.name}"
-
-    /** The simple name of this attribute. */
-    val name: String get() = property.name
+    override val id: String get() = "${modelClass.id}.${name}"
 
     /** receives the value of this attribute from the given object. */
-    operator fun get(anObject: T): V = property(anObject)
+    operator fun get(anObject: T): V = getter(anObject)
 }
 
-/** An immutable attribute. */
-class ImmutableModelAttribute<T : Any, V : Any?>(modelClass: ModelClass<T>, property: KProperty1<T, V>) :
-    ModelAttribute<T, V>(modelClass, property)
-
-/** A mutable attribute. */
-class MutableModelAttribute<T : Any, V : Any?>(
+/** An immutable attribute that represents a [KProperty1] */
+class ImmutablePropertyAttribute<T : Any, V : Any?>(
     modelClass: ModelClass<T>,
-    override val property: KMutableProperty1<T, V>
-) : ModelAttribute<T, V>(modelClass, property) {
+    /** The property wrapped by this attribute. */
+    val property: KProperty1<T, V>
+) :
+    ModelAttribute<T, V>(modelClass, property.name, property::get)
+
+/** A mutable attribute that represents a [KMutableProperty1] */
+class MutablePropertyAttribute<T : Any, V : Any?>(
+    modelClass: ModelClass<T>,
+    /** The mutable property wrapped by this attribute. */
+    val property: KMutableProperty1<T, V>
+) : ModelAttribute<T, V>(modelClass, property.name, property::get) {
     /** modifies the value of this attribute in the given object. */
     operator fun set(anObject: T, aValue: V): Unit = property.set(anObject, aValue)
 }
+
+/** A immutable attribute that represents a function result */
+class FunctionAttribute<T : Any, V : Any?>(
+    modelClass: ModelClass<T>,
+    /** The function wrapped by this attribute. */
+    val function: KFunction1<T, V>
+) : ModelAttribute<T, V>(modelClass, function.name, function)

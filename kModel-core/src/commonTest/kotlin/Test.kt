@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 import de.kotlinBerlin.kModel.MODEL_MANAGER
 import de.kotlinBerlin.kModel.dsl.ModelAttributeBuilder
 import de.kotlinBerlin.kModel.dsl.model

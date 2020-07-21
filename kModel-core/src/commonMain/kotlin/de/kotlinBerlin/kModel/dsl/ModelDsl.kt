@@ -4,6 +4,7 @@ package de.kotlinBerlin.kModel.dsl
 
 import de.kotlinBerlin.kModel.*
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction1
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 
@@ -45,15 +46,15 @@ class ModelClassBuilder<T : Any>(modelClass: ModelClass<T>) : ModelElementBuilde
         modelElement.internalSuperClass = aSuperClass
     }
 
-    /** Defines a new [ImmutableModelAttribute] for this [ModelClass]. */
+    /** Defines a new [ImmutablePropertyAttribute] for this [ModelClass]. */
     @Suppress("UNCHECKED_CAST")
     fun <V : Any?> attribute(
         anAttribute: KProperty1<T, V>,
         anInitBlock: ModelAttributeBuilder<T, V>.() -> Unit = {}
     ): ModelAttribute<T, V> {
         val tempExistingAttribute =
-            modelElement.internalAttributes.find { it.property == anAttribute } as? ModelAttribute<T, V>
-        val tempAttribute = tempExistingAttribute ?: ImmutableModelAttribute(
+            modelElement.internalAttributes.find { it is ImmutablePropertyAttribute && it.property == anAttribute } as? ModelAttribute<T, V>
+        val tempAttribute = tempExistingAttribute ?: ImmutablePropertyAttribute(
             modelElement,
             anAttribute
         ).also { modelElement.internalAttributes.add(it) }
@@ -62,14 +63,15 @@ class ModelClassBuilder<T : Any>(modelClass: ModelClass<T>) : ModelElementBuilde
         return tempAttribute
     }
 
-    /** Defines a new [MutableModelAttribute] for this [ModelClass]. */
+    /** Defines a new [MutablePropertyAttribute] for this [ModelClass]. */
     @Suppress("UNCHECKED_CAST")
     fun <V : Any?> attribute(
         anAttribute: KMutableProperty1<T, V>,
         anInitBlock: ModelAttributeBuilder<T, V>.() -> Unit = {}
     ): ModelAttribute<T, V> {
-        val tempExistingAttribute = modelElement.internalAttributes.find { it == anAttribute } as? ModelAttribute<T, V>
-        val tempAttribute = tempExistingAttribute ?: MutableModelAttribute(
+        val tempExistingAttribute =
+            modelElement.internalAttributes.find { it is MutablePropertyAttribute && it.property == anAttribute } as? ModelAttribute<T, V>
+        val tempAttribute = tempExistingAttribute ?: MutablePropertyAttribute(
             modelElement,
             anAttribute
         ).also { modelElement.internalAttributes.add(it) }
@@ -78,6 +80,22 @@ class ModelClassBuilder<T : Any>(modelClass: ModelClass<T>) : ModelElementBuilde
         return tempAttribute
     }
 
+    /** Defines a new [FunctionAttribute] for this [ModelClass]. */
+    @Suppress("UNCHECKED_CAST")
+    fun <V : Any?> attribute(
+        aFunction: KFunction1<T, V>,
+        anInitBlock: ModelAttributeBuilder<T, V>.() -> Unit = {}
+    ): ModelAttribute<T, V> {
+        val tempExistingAttribute =
+            modelElement.internalAttributes.find { it is FunctionAttribute && it.function == aFunction } as? ModelAttribute<T, V>
+        val tempAttribute = tempExistingAttribute ?: FunctionAttribute(
+            modelElement,
+            aFunction
+        ).also { modelElement.internalAttributes.add(it) }
+        val tempBuilder = ModelAttributeBuilder(tempAttribute)
+        tempBuilder.anInitBlock()
+        return tempAttribute
+    }
 
     /** Bidirectional 1 to ? relation. */
     @Suppress("UNCHECKED_CAST")

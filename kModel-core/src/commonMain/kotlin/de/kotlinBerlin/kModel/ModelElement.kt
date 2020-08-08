@@ -10,10 +10,8 @@ abstract class ModelElement {
     /** Identifies this [ModelElement]. */
     abstract val id: String
 
-    internal val internalModelProperties = mutableMapOf<String, Any?>()
-
     /** The model properties of this [ModelElement] */
-    val modelProperties: Map<String, Any?> get() = internalModelProperties
+    val modelProperties: MutableMap<String, Any?> get() = mutableMapOf()
 
     /** Two [ModelElement] instances are equal, if their [id] properties are equal. */
     override fun equals(other: Any?): Boolean = other is ModelElement && id == other.id

@@ -34,7 +34,7 @@ sealed class ModelElementBuilder<M : ModelElement>(internal open val modelElemen
 
     /** Defines a property on the current [ModelElement]. */
     fun property(aKey: String, aValue: Any?) {
-        modelElement.internalModelProperties[aKey] = aValue
+        modelElement.modelProperties[aKey] = aValue
     }
 }
 

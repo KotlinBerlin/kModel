@@ -17,10 +17,9 @@ kotlin {
         attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
-            kotlinOptions.useIR = true
         }
     }
-    js(IR) {
+    js {
         browser()
         nodejs()
     }

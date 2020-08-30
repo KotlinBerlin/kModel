@@ -5,12 +5,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 plugins {
-    kotlin("multiplatform") version "1.4.0-rc" apply false
+    kotlin("multiplatform") version "1.4.0" apply false
 }
 
 allprojects {
     group = "de.kotlin-berlin"
-    version = "1.0-FINAL"
+    version = "1.1-FINAL"
 
     repositories {
         jcenter()

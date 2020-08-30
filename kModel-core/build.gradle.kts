@@ -17,11 +17,12 @@ kotlin {
         attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 8)
         compilations.all {
             kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.useIR = true
         }
     }
-    js {
-        browser {
-        }
+    js(IR) {
+        browser()
+        nodejs()
     }
     if (ideaActive) {
         mingwX64()
